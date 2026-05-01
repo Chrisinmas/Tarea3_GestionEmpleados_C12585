@@ -1,5 +1,104 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<Tarea3_GestionEmpleados_C12585.Models.Empleado>
+
 @{
+    ViewData["Title"] = "Empleados";
+    var busqueda = ViewBag.Busqueda as string ?? "";
+    var paginaActual = (int)ViewBag.PaginaActual;
+    var totalPaginas = (int)ViewBag.TotalPaginas;
+    var totalRegistros = (int)ViewBag.TotalRegistros;
 }
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Gestión de Empleados</h2>
+        <a asp-action="Create" class="btn btn-primary">+ Nuevo Empleado</a>
+    </div>
+
+    @* Buscador *@
+    <form method="get" asp-action="Index" class="mb-4">
+        <div class="input-group">
+            <input type="text"
+                   name="busqueda"
+                   value="@busqueda"
+                   class="form-control"
+                   placeholder="Buscar por nombre, apellidos o departamento..." />
+            <button type="submit" class="btn btn-outline-secondary">Buscar</button>
+            @if (!string.IsNullOrEmpty(busqueda))
+            {
+                <a asp-action="Index" class="btn btn-outline-danger">Limpiar</a>
+            }
+        </div>
+    </form>
+
+    @* Total de registros *@
+    <p class="text-muted">
+        Total de registros encontrados: <strong>@totalRegistros</strong>
+    </p>
+
+    @* Tabla *@
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre Completo</th>
+                <th>Departamento</th>
+                <th>Salario</th>
+                <th>Fecha Ingreso</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in Model)
+            {
+                <tr>
+                    <td>@emp.NombreCompleto</td>
+                    <td>@emp.Departamento</td>
+                    <td>@emp.Salario.ToString("C")</td>
+                    <td>@emp.FechaIngreso.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @if (emp.Activo)
+                        {
+                            <span class="badge bg-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Dado de Baja</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@emp.Id"
+                           class="btn btn-sm btn-warning">Editar</a>
+
+                        <form asp-action="ToggleActivo" asp-route-id="@emp.Id"
+                              method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit"
+                                    class="btn btn-sm @(emp.Activo ? "btn-danger" : "btn-success")">
+                                @(emp.Activo ? "Dar de Baja" : "Activar")
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @* Paginación *@
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <span>Página <strong>@paginaActual</strong> de <strong>@totalPaginas</strong></span>
+        <div>
+            <a asp-action="Index"
+                   asp-route-pagina="@(paginaActual - 1)"
+                   asp-route-busqueda="@busqueda"
+                   class="btn btn-outline-secondary @(paginaActual <= 1 ? "disabled" : "")">
+                Anterior
+            </a>
+            <a asp-action="Index"
+                   asp-route-pagina="@(paginaActual + 1)"
+                   asp-route-busqueda="@busqueda"
+                   class="btn btn-outline-secondary @(paginaActual >= totalPaginas ? "disabled" : "")">
+                Siguiente
+            </a>
+        </div>
+    </div>
+</div>
