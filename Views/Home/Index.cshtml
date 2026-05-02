@@ -1,8 +1,26 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+
+            <h1 class="display-5 fw-bold mb-2">Sistema de Gestión de Empleados</h1>
+            <p class="text-muted mb-5">Universidad de Costa Rica — Lenguajes para Aplicaciones Comerciales</p>
+
+            <hr class="mb-5" />
+
+            <p class="lead mb-5">
+                Plataforma para el registro, búsqueda y administración de empleados.
+                Permite gestionar el estado activo o inactivo del personal mediante alta y baja lógica.
+            </p>
+
+            <div class="d-flex justify-content-center gap-3">
+                <a href="/Empleados/Index" class="btn btn-dark btn-lg px-5">Ver Empleados</a>
+                <a href="/Empleados/Create" class="btn btn-outline-dark btn-lg px-5">Nuevo Empleado</a>
+            </div>
+
+        </div>
+    </div>
 </div>
