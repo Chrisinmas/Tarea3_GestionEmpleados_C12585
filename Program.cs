@@ -13,6 +13,14 @@ builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 
 var app = builder.Build();
 
+// Seed de datos iniciales
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.Migrate();
+    SeedData.Initialize(context);
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
